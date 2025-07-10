@@ -202,16 +202,17 @@ align_duration <- function(x,                         # data.table time-series
             stop ("'func' must be a function")
         }
         res <- data.table(index=y,
-                          do.call(rbind,
-                                  .align_duration_cpp(x[[1]],        # the index of the data.table
-                                                      sort(y),       # nanotime vector to align on
-                                                      x,             # data.table data
-                                                      start,
-                                                      end,
-                                                      sopen,
-                                                      eopen,
-                                                      func)))
-        names(res)[1] <- names(x)[1]    # keep the original name of the index
+                          duration=do.call(
+                            rbind,
+                            .align_duration_cpp(x[[1L]],       # the index of the data.table
+                                                sort(y),       # nanotime vector to align on
+                                                x,             # data.table data
+                                                start,
+                                                end,
+                                                sopen,
+                                                eopen,
+                                                func)))
+        setnames(res, 1L, names(x)[1L])    # keep the original name of the index
         setkeyv(res, key(x))
         res
     }
